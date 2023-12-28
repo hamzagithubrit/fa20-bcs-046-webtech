@@ -1,0 +1,67 @@
+<!-- views/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task List</title>
+  </head>
+  <body>
+    <h1>Task List</h1>
+
+    <!-- Form for Creating or Updating a Task -->
+    <form action="/task" method="POST">
+      <!-- Title Field -->
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" required />
+
+      <!-- Description Field -->
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" required></textarea>
+
+      <!-- Completed Checkbox -->
+      <label for="completed">Completed:</label>
+      <input type="checkbox" id="completed" name="completed" />
+
+      <!-- Hidden Field for Task ID (for Updating) -->
+      <input type="hidden" id="taskId" name="taskId" value="" />
+
+      <!-- Submit Button (For both Create and Update) -->
+      <input type="submit" value="Save Task" />
+    </form>
+
+    <h2>Task List</h2>
+
+    <ul>
+      <% tasks.forEach(task => { %>
+      <li>
+        <%= task.title %> - <%= task.description %> - <%= task.completed ?
+        'Completed' : 'Incomplete' %>
+
+        <!-- Edit Button -->
+        <button
+          onclick="editTask('<%= task._id %>', '<%= task.title %>', '<%= task.description %>', <%= task.completed %>)"
+        >
+          Edit
+        </button>
+
+        <!-- Delete Button -->
+        <form action="/task/<%= task._id %>?_method=DELETE" method="POST">
+          <input type="submit" value="Delete" />
+        </form>
+      </li>
+      <% }); %>
+    </ul>
+
+    <script>
+      // JavaScript function to populate the form fields for editing
+      function editTask(id, title, description, completed) {
+        document.getElementById("title").value = title;
+        document.getElementById("description").value = description;
+        document.getElementById("completed").checked = completed;
+        document.getElementById("taskId").value = id;
+      }
+    </script>
+  </body>
+</html>
